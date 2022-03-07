@@ -18,10 +18,10 @@ def omr_preprocess(data):
 
     # remove time points where there was an angle change of more than pi from one frame to another
     for row in range(len(new)-1):
-        heading = new['heading_direction'][row]
-        next_heading = new['heading_direction'][row+1]
+        heading = new.iloc[row,3]
+        next_heading = new.iloc[row+1,3]
         if np.abs(next_heading-heading) >= np.pi:
-            next_heading = heading
+            new.iloc[row+1,3] = new.iloc[row,3]
 
 
     # interpolating and normalising data to a fixed set of points

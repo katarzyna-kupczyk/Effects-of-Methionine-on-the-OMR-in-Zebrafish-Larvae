@@ -1,17 +1,48 @@
 import pandas as pd
 import numpy as np
+import os
 from divide_data import divide_data_by_contrast, divide_data_by_flow_direction
 from preprocess import omr_preprocess
 
-if __name__ == "__main__":
-    path_to_data = input('PATH TO DATA: ')
-    data = pd.read_csv(path_to_data)
-    data.columns = ['X_coord', 'Y_coord', 'heading_direction', \
+
+def all_file_loop(folder_path):
+    '''Loops through all data files, dividing them into flow and contrast,
+    preprocessing them and writing them into new/combines files for further analysis'''
+
+    # Putting all csv file paths into one list to loop through
+    folder = os.fsencode(folder_path)
+    filenames = []
+    for file in os.listdir(folder):
+        filename = os.fsdecode(file)
+        if filename.endswith('.csv'):
+            filenames.append(filename)
+
+    # Looping through all csv files, dividing them and preprocessing
+    for f in filenames:
+        data_path = os.path.join(folder_path, f)
+        data = pd.read_csv(data_path)
+        data.columns = ['X_coord', 'Y_coord', 'heading_direction', \
                 'cumulative_direction','beat_freq', 'beat_amp', \
                 'tail_move?', 'timestamp', 'contrast_level', 'flow_direction']
-    right, left = divide_data_by_flow_direction(data)
-    right_C0, right_C01, right_C1, right_C2, right_C3, right_C5, right_C7, right_C10 = divide_data_by_contrast(right)
-    left_C0, left_C01, left_C1, left_C2, left_C3, left_C5, left_C7, left_C10 = divide_data_by_contrast(left)
-    preproc_left_C01 = omr_preprocess(left_C01)
-    print('This is the preprocessed left_C01: \n',preproc_left_C01)
-    print('Successful data division')
+
+        # dividing data into flow direction and contrast level
+        right, left = divide_data_by_flow_direction(data)
+        right_C0, right_C01, right_C1, right_C2, right_C3, right_C5, right_C7, right_C10 = divide_data_by_contrast(right)
+        left_C0, left_C01, left_C1, left_C2, left_C3, left_C5, left_C7, left_C10 = divide_data_by_contrast(left)
+
+        # preprocessing all dataframes
+        file_name_dict = {right_C0:'right_C0', right_C01:'right_C01', right_C1:'right_C1', right_C2:'right_C2', \
+                            right_C3:'right_C3', right_C5:'right_C5', right_C7:'right_C7', right_C10:'right_C10',\
+                            left_C0:'left_C0', left_C01:'left_C01', left_C1:'left_C1', left_C2:'left_C2', \
+                            left_C3:'left_C3', left_C5:'left_C5', left_C7:'left_C7', left_C10:'left_C10'}
+        for df, name in file_name_dict:
+            preproc = omr_preprocess(df)
+            file_name = f'{name}.csv'
+            preproc.to_csv(file_name)
+
+
+
+
+if __name__ == "__main__":
+    folder_path = input('Files to preprocess: ')
+    all_file_loop(folder_path)

@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+# 1. Average cumulative heading
+
+
+
 def make_fish_list():
     pass
 
