@@ -3,6 +3,7 @@ import numpy as np
 import os
 from divide_data import divide_data_by_contrast, divide_data_by_flow_direction
 from preprocess import omr_preprocess
+from varname import nameof
 
 
 def all_file_loop(folder_path):
@@ -31,15 +32,26 @@ def all_file_loop(folder_path):
         left_C0, left_C01, left_C1, left_C2, left_C3, left_C5, left_C7, left_C10 = divide_data_by_contrast(left)
 
         # preprocessing all dataframes
-        file_name_dict = {right_C0:'right_C0', right_C01:'right_C01', right_C1:'right_C1', right_C2:'right_C2', \
-                            right_C3:'right_C3', right_C5:'right_C5', right_C7:'right_C7', right_C10:'right_C10',\
-                            left_C0:'left_C0', left_C01:'left_C01', left_C1:'left_C1', left_C2:'left_C2', \
-                            left_C3:'left_C3', left_C5:'left_C5', left_C7:'left_C7', left_C10:'left_C10'}
-        for df, name in file_name_dict:
+        df_list = [right_C01, right_C1, right_C2, right_C3, right_C5, right_C7, right_C10,\
+                    left_C01, left_C1, left_C2, left_C3, left_C5, left_C7, left_C10]
+        right_C01.name = 'right_C01'
+        right_C1.name = 'right_C1'
+        right_C2.name = 'right_C2'
+        right_C3.name = 'right_C3'
+        right_C5.name = 'right_C5'
+        right_C7.name = 'right_C7'
+        right_C10.name = 'right_C10'
+        left_C01.name = 'left_C01'
+        left_C1.name = 'left_C1'
+        left_C2.name = 'left_C2'
+        left_C3.name = 'left_C3'
+        left_C5.name = 'left_C5'
+        left_C7.name = 'left_C7'
+        left_C10.name = 'left_C10'
+        for df in df_list:
             preproc = omr_preprocess(df)
-            file_name = f'{name}.csv'
+            file_name = f'{df.name}.csv'
             preproc.to_csv(file_name)
-
 
 
 
