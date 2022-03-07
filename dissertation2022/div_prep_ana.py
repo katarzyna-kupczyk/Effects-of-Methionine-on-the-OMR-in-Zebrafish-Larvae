@@ -3,7 +3,6 @@ import numpy as np
 import os
 from divide_data import divide_data_by_contrast, divide_data_by_flow_direction
 from preprocess import omr_preprocess
-from varname import nameof
 
 
 def all_file_loop(folder_path):
@@ -50,8 +49,8 @@ def all_file_loop(folder_path):
         left_C10.name = 'left_C10'
         for df in df_list:
             preproc = omr_preprocess(df)
-            file_name = f'{df.name}.csv'
-            preproc.to_csv(file_name)
+            file_name = f'preprocessed_{df.name}.csv'
+            preproc.to_csv(os.path.join(folder_path,file_name))
 
 
 
