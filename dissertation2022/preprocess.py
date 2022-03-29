@@ -16,12 +16,13 @@ def omr_preprocess(data):
     new = new.set_index('timestamp').reset_index()
 
 
-    # remove time points where there was an angle change of more than pi from one frame to another
-    for row in range(len(new)-1):
-        heading = new.iloc[row,3]
-        next_heading = new.iloc[row+1,3]
-        if np.abs(next_heading-heading) >= np.pi:
-            new.iloc[row+1,3] = new.iloc[row,3]
+     # remove time points where there was an angle change of more than pi from one frame to another
+    for i, row in new.iterrows():
+        if i+1 == len(new):
+            break
+            # modify to add the exclusion zone
+        if np.abs(new.at[i+1,'cumulative_direction']-new.at[i,'cumulative_direction']) >= 2.8:
+            new.at[i+1, 'cumulative_direction'] = new.at[i,'cumulative_direction']
 
 
     # interpolating and normalising data to a fixed set of points
@@ -52,7 +53,7 @@ def omr_preprocess(data):
     # cleaning the timestamps
     interp.insert(0, 'new_timestamp', range(1, 1 + len(interp)))
     interp = interp.drop(columns=['timestamp']).rename(columns={'new_timestamp':'timestamp'})
-    interp['timestamp'] = interp['timestamp']/1000
+    interp['timestamp'] = interp['timestamp']/100
 
     return np.array(interp)
 

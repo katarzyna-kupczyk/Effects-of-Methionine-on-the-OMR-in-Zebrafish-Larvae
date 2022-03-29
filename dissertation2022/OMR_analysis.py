@@ -16,13 +16,8 @@ def omr_analysis(combined_fish):
     '''Full data analysis of OMR data'''
 
     # Average cumulative heading and SEM per frame
-    cumul_av_list = []
-    cumul_sem_list = []
-    for frame in combined_fish:
-        cumul_av = np.nanmean(combined_fish[:,frame,4])
-        cumul_sem = sem(combined_fish[:,frame,4],nan_policy='omit')
-        cumul_av_list.append(cumul_av)
-        cumul_sem_list.append(cumul_sem)
+    cumul_av = [np.nanmean(combined_fish[:,frame,4]) for frame in combined_fish]
+    cumul_sem = [sem(combined_fish[:,frame,4],nan_policy='omit') for frame in combined_fish]
 
     # Continuous wavelet transform and fast fourier transform to denoise data and find events
 
