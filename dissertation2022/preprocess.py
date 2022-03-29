@@ -54,7 +54,7 @@ def omr_preprocess(data):
     interp = interp.drop(columns=['timestamp']).rename(columns={'new_timestamp':'timestamp'})
     interp['timestamp'] = interp['timestamp']/1000
 
-    return interp
+    return np.array(interp)
 
 if __name__ == "__main__":
     path_to_data = input('PATH TO DATA: ')
